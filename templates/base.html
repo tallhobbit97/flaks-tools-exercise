@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    
+    <h1>{% block survey_name %} {% endblock %}</h1>
+
+    <section class="messages">
+        {% for msg in get_flashed_messages() %}
+        <p>{{msg}}</p>
+        {% endfor %}
+    </section>
+    {% block content %}{% endblock %}
+
+</body>
+</html>
