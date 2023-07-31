@@ -1,4 +1,4 @@
-from flask import Flask, request, flash, render_template, redirect
+from flask import Flask, request, flash, render_template, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import satisfaction_survey
 
@@ -19,6 +19,13 @@ curr_question = 0
 def root_page():
     """Shows the user the title and instructions for the survey."""
     return render_template('survey.html', title=satisfaction_survey.title, survey_name=satisfaction_survey.title, instructions=satisfaction_survey.instructions)
+
+@app.route('/start-survey', methods=['POST'])
+def handle_start():
+    '''Initializes the responses list within the session and redirects to the first question'''
+    global repsonses
+    session['responses'] = responses
+    return redirect('question/0')
 
 @app.route('/question/<num>')
 def question_page(num):
@@ -41,7 +48,9 @@ def question_page(num):
 def receive_answer():
     """Handling the storage of answers to questions."""
     answer = request.form['choice']
+    responses = session['responses']
     responses.append(answer)
+    session['responses'] = responses
     global curr_question
     curr_question += 1
     return redirect(f'/question/{curr_question}')
